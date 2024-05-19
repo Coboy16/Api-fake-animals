@@ -1,9 +1,21 @@
 import { Request, Response } from "express";
 import { handleHttp } from "../utils/error.handle";
+import { getAllDogsPage } from "../services/animals.services";
 
-const getDogs = async (req: Request, res: Response) => {
+const getDogsPage = async (req: Request, res: Response) => {
   try {
-    res.send('DOGS');
+    const page = parseInt(req.params.page, 10);
+
+    if (isNaN(page) || page < 1)
+      return res.status(400).json({ message: 'IVALID_PAGE_NUMBER' });
+
+    const dogs = await getAllDogsPage(page);
+
+    if ('message' in dogs)
+      return res.status(404).json(dogs);
+
+    return res.status(200).json(dogs);
+
   } catch (e) {
     handleHttp(res, 'ERROR_GET_DOGS', e);
   }
@@ -25,4 +37,4 @@ const getBunny = (req: Request, res: Response) => {
   }
 };
 
-export { getDogs };
+export { getDogsPage };
