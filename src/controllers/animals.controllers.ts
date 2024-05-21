@@ -1,25 +1,18 @@
 import { Request, Response } from "express";
+
 import { handleHttp } from "../utils/error.handle";
-import { getAllDogsPage, getAnimalByID } from "../services/animals.services";
+import { getAnimalByID } from "../services/animals.services";
+import { animalsResponse } from "../utils/animals.handdle";
 
-const getDogsPage = async (req: Request, res: Response) => {
-  try {
-    const page = parseInt(req.params.page, 10);
+const getDogsPage = async (req: Request, res: Response) => animalsResponse(req, res, 'dogs');
 
-    if (isNaN(page) || page < 1)
-      return res.status(400).json({ message: 'IVALID_PAGE_NUMBER' });
+const getCats = (req: Request, res: Response) => animalsResponse(req, res, 'cats');
 
-    const dogs = await getAllDogsPage(page);
+const getBunnies = (req: Request, res: Response) => animalsResponse(req, res, 'bunnies');
 
-    if ('message' in dogs)
-      return res.status(404).json(dogs);
+const getBirds = (req: Request, res: Response) => animalsResponse(req, res, 'birds');
 
-    return res.status(200).json(dogs);
-
-  } catch (e) {
-    handleHttp(res, 'ERROR_GET_DOGS', e);
-  }
-};
+const getMouses = (req: Request, res: Response) => animalsResponse(req, res, 'mouses');
 
 const getAnimalId = async (req: Request, res: Response) => {
   try {
@@ -39,20 +32,4 @@ const getAnimalId = async (req: Request, res: Response) => {
   }
 };
 
-const getCats = async (req: Request, res: Response) => {
-  try {
-    res.send('CATS');
-  } catch (e) {
-    handleHttp(res, 'ERROR_GET_CATS', e);
-  }
-};
-
-const getBunny = (req: Request, res: Response) => {
-  try {
-    res.send('BUNNY');
-  } catch (e) {
-    handleHttp(res, 'ERROR_GET_CATS', e);
-  }
-};
-
-export { getDogsPage, getAnimalId };
+export { getDogsPage, getCats, getBunnies, getBirds, getMouses, getAnimalId };
