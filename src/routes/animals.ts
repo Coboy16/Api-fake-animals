@@ -1,9 +1,12 @@
 import { Request, Response, Router } from "express";
-import { getDogsPage } from "../controllers/animals.controllers";
+import { getAnimalId, getDogsPage } from "../controllers/animals.controllers";
 
 const router = Router();
 
 router.get('/dogs/:page', getDogsPage);
+
+
+router.get('/:id', getAnimalId);
 
 router.get('/cats', (req: Request, res: Response) => {
   res.send('CATS');

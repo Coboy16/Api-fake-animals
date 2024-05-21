@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { Schema } from "mongoose";
 
 export interface Animals {
   name: string;
@@ -11,5 +11,6 @@ export interface Animals {
   porfilePhoto: string;
   photos: Array<string>;
   type: 'dogs' | 'cats' | 'bunny' | 'rabiots' | 'mouses';
-  enterpriseId: Types.ObjectId;
+  enterpriseId: Schema.Types.ObjectId;
+  address: string;
 };
