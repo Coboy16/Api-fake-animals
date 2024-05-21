@@ -4,7 +4,7 @@ import { handleHttp } from "../utils/error.handle";
 import { getAnimalByID } from "../services/animals.services";
 import { animalsResponse } from "../utils/animals.handdle";
 
-const getDogsPage = async (req: Request, res: Response) => animalsResponse(req, res, 'dogs');
+const getDogsPage = (req: Request, res: Response) => animalsResponse(req, res, 'dogs');
 
 const getCats = (req: Request, res: Response) => animalsResponse(req, res, 'cats');
 

@@ -22,7 +22,7 @@ const getAnimalsPage = async (page: number, animals: string) => {
 //Retorna la informacion de una animal con su id
 const getAnimalByID = async (id: string) => {
   if (!Types.ObjectId.isValid(id))
-    return { messge: 'INVALID_ID' };
+    return { message: 'INVALID_ID' };
 
   const animal = await animalsModel.findById(id)
     .select('-type')
