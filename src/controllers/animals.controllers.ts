@@ -86,8 +86,4 @@ const postCreateAnimal = async (req: Request, res: Response) => {
   }
 };
 
-const postUpdateAnimal = async (req: Request, res: Response) => {
-
-};
-
 export { getDogsPage, getCats, getBunnies, getBirds, getMouses, getAnimalId, putUpdateAnimal, postCreateAnimal };

@@ -1,7 +1,8 @@
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { Types } from "mongoose";
-
 import client from "../utils/clientS3.handdle";
+import { Types } from "mongoose";
+import "dotenv/config";
+
 import { AWS_BUCKET_NAME } from "../config/aws.config";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
@@ -59,7 +60,7 @@ const getProfileUrl = async (animalId: string, fileName: string) => {
   try {
     const key = `${animalId}/profile-photo/${fileName}`;
     const comand = new GetObjectCommand({ Bucket: AWS_BUCKET_NAME, Key: key });
-    const response = await getSignedUrl(client, comand, { expiresIn: 7200 });
+    const response = await getSignedUrl(client, comand, { expiresIn: parseInt(<string>process.env.TIME_S3) }); //7 dias
     return { urlProfile: response };
   } catch (e) {
     console.log('ERROR_GET_URL_PHOTO_S3', e);
