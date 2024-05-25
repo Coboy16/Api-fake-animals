@@ -1,4 +1,4 @@
-import { Document, Schema, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import { Animals } from "../interface/animals.interface";
 
 const animalsSchema = new Schema<Animals>(
@@ -12,10 +12,10 @@ const animalsSchema = new Schema<Animals>(
     },
     age: { type: Number, required: true },
     vacunate: { type: Boolean, required: true },
-    decription: { type: String, required: true },
+    description: { type: String, required: true },
     weight: { type: Number, required: true },
-    porfilePhoto: { type: String, required: true },
-    photos: { type: [String], required: true },
+    profilePhoto: { type: String, required: true },
+    photos: { type: [String] },
     type: {
       type: String,
       enum: ['dogs', 'cats', 'bunny', 'rabiots', 'mouses'],
@@ -26,7 +26,6 @@ const animalsSchema = new Schema<Animals>(
       required: true,
       ref: 'enterprises',
     },
-    address: { type: String, required: true },
   },
   { timestamps: true, versionKey: false }
 );

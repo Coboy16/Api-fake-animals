@@ -2,7 +2,8 @@ import { Router } from "express";
 
 const router = Router();
 
-router.post('/clients/create');
-router.post('/clients/:id');
+router.post('/clients/register');
+router.post('/clients/login');
+
 
 export { router };

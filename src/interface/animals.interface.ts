@@ -6,11 +6,11 @@ export interface Animals {
   sexo: 'Macho' | 'Hembra';
   age: number;
   vacunate: boolean;
-  decription: string;
+  description: string;
   weight: number;
-  porfilePhoto: string;
+  profilePhoto: string;
   photos: Array<string>;
   type: 'dogs' | 'cats' | 'bunny' | 'rabiots' | 'mouses';
   enterpriseId: Schema.Types.ObjectId;
-  address: string;
+
 };
