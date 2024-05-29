@@ -48,7 +48,6 @@ const updateAnimalId = async (animalId: string, updateData: Partial<Animals>) =>
   const updateAnimal = await animalsModel.findByIdAndUpdate(animalId,
     { $set: updateData }, { new: true, runValidators: true });
 
-
   if (!updateAnimal)
     return { message: 'ANIMAL_NOT_FOUND' };
 
@@ -60,7 +59,6 @@ const updateAnimalId = async (animalId: string, updateData: Partial<Animals>) =>
 const createNewAnimal = async (file: Express.Multer.File, animal: Animals) => {
   try {
     const responseNew = await animalsModel.create(animal);
-    console.log();
 
     if (!responseNew._id)
       return { message: 'NOT_CREATE_ANIMAL' };

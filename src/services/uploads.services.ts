@@ -36,6 +36,37 @@ const insertProfilePhotoAnimal = async (file: Express.Multer.File, animalId: str
   }
 };
 
+
+const insertPhotoPerfilGlobal = async (file: Express.Multer.File, subjectId: string, subjetType: number) => {
+  //todo: TYPES: (1 -> Animals), (2 -> Clients), (3 -> Enterprise)
+  if (!Types.ObjectId.isValid(subjectId))
+    return { messge: 'INVALID_ID' };
+
+  const nameType: string = subjetType === 1 ? 'Animals' : subjetType === 2 ? 'Clients' : 'Enterprise';
+  const uploadParams = {
+    Bucket: AWS_BUCKET_NAME,
+    Key: `${nameType}/profile-photo/${subjectId}/${file.originalname}`,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+  };
+
+  try {
+    const comand = new PutObjectCommand(uploadParams);
+    const response = await client.send(comand);
+
+    if (response.$metadata.httpStatusCode === 200)
+      return {
+        path: `${nameType}/profile-photo/${subjectId}/${file.originalname}`,
+        status: true,
+      };
+    else
+      return { status: false, message: 'ERROR_UPLOAD_PHOTO' };
+  } catch (e) {
+    console.log('ERROR_UPLOAD_PHOTO_S3', e);
+    throw e;
+  }
+};
+
 //obtiene la informacion de la imagen en S3, el metadato
 const getProfileInfo = async (animalId: string, fileName: string) => {
   if (!Types.ObjectId.isValid(animalId))
@@ -67,4 +98,20 @@ const getProfileUrl = async (animalId: string, fileName: string) => {
     throw e;
   }
 };
-export { insertProfilePhotoAnimal, getProfileUrl, getProfileInfo };
+
+//obtine el url verificado de la imagen para que todos la puedan ver 
+const getDataUrlGlobal = async (subjectId: string, fileName: string, typeSubjet: number) => {
+  try {
+    const nameType: string = typeSubjet === 1 ? 'Animals' : typeSubjet === 2 ? 'Clients' : 'Enterprise';
+
+    const key = `${nameType}/profile-photo/${subjectId}/${fileName}`;
+    const comand = new GetObjectCommand({ Bucket: AWS_BUCKET_NAME, Key: key });
+    const response = await getSignedUrl(client, comand, { expiresIn: parseInt(<string>process.env.TIME_S3) }); //7 dias
+    return { urlProfile: response };
+  } catch (e) {
+    console.log('ERROR_GET_URL_PHOTO_S3', e);
+    throw e;
+  }
+};
+
+export { insertProfilePhotoAnimal, getProfileUrl, getProfileInfo, insertPhotoPerfilGlobal, getDataUrlGlobal };
