@@ -2,6 +2,23 @@ import { Types } from "mongoose";
 
 import clientModel from "../models/clients.models";
 import { Client } from "../interface/clients.interface";
+import { getDataUrlGlobal, insertPhotoPerfilGlobal } from "./uploads.services";
+
+
+const updatePhotoProfileByID = async (file: Express.Multer.File, clientId: string) => {
+  if (!Types.ObjectId.isValid(clientId))
+    return { message: 'INVALID_ID' };
+
+  const respInsertS3 = await insertPhotoPerfilGlobal(file, clientId, 2);
+
+  if (respInsertS3.status && respInsertS3.path != '') {
+    const resUrl = await getDataUrlGlobal(clientId, `${file.originalname}`, 2);
+    const updateData = { "profilePhoto": resUrl.urlProfile };
+    const updateAnimal = await updateClientByID(clientId, updateData);
+    return updateAnimal;
+  } else
+    return { message: 'NO_INSERT_PHOTO_S3' };
+};
 
 const getInfoClientByID = async (clientId: string) => {
   if (!Types.ObjectId.isValid(clientId))
@@ -41,4 +58,4 @@ const updateClientByID = async (clientId: string, updateData: Partial<Client>) =
   return updateClient;
 };
 
-export { getInfoClientByID, updateClientByID, deleteClientByID };
+export { getInfoClientByID, updateClientByID, deleteClientByID, updatePhotoProfileByID };

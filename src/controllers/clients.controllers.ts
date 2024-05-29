@@ -1,7 +1,24 @@
 import { Request, Response } from "express";
 
 import { handleHttp } from "../utils/error.handle";
-import { deleteClientByID, getInfoClientByID, updateClientByID } from "../services/clients.services";
+import { deleteClientByID, getInfoClientByID, updateClientByID, updatePhotoProfileByID } from "../services/clients.services";
+
+const updatePhotoById = async (req: Request, res: Response) => {
+  try {
+    if (!req.file)
+      return res.status(400).send({ message: 'NOT_FILE_UPLOAD' });
+
+    const id = req.params.id;
+    const repstPhoto = await updatePhotoProfileByID(req.file, id);
+
+    if ('message' in repstPhoto)
+      return res.status(400).json(repstPhoto);
+
+    return res.status(201).json({ status: true, urlPhotoData: repstPhoto });
+  } catch (e) {
+    handleHttp(res, 'ERROR_UPDATE_PROFILE_PHOTO', e);
+  }
+};
 
 const getClientById = async (req: Request, res: Response) => {
   try {
@@ -51,4 +68,4 @@ const deleteClient = async (req: Request, res: Response) => {
   }
 };
 
-export { getClientById, putClientById, deleteClient };
+export { getClientById, putClientById, deleteClient, updatePhotoById };

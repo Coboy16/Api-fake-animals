@@ -67,7 +67,7 @@ const createNewAnimal = async (file: Express.Multer.File, animal: Animals) => {
 
     if (respInsertS3.status && respInsertS3.path != '') {
 
-      const resUrl = await getDataUrlGlobal(`${responseNew._id}`, `${file.originalname}`, 2);
+      const resUrl = await getDataUrlGlobal(`${responseNew._id}`, `${file.originalname}`, 1);
       const updateData = { "profilePhoto": resUrl.urlProfile };
       const updateAnimal = await updateAnimalId(`${responseNew._id}`, updateData);
 
