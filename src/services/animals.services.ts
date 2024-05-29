@@ -2,7 +2,7 @@ import animalsModel from "../models/animals.models";
 import { Types } from "mongoose";
 import enterpriseModel from "../models/enterprises.models";
 import { Animals } from "../interface/animals.interface";
-import { getProfileUrl, insertProfilePhotoAnimal } from "./uploads.services";
+import { getDataUrlGlobal, insertPhotoPerfilGlobal, } from "./uploads.services";
 
 
 //Retorna los 6 primeros documentos, dependiendo al numero de pagina
@@ -63,11 +63,11 @@ const createNewAnimal = async (file: Express.Multer.File, animal: Animals) => {
     if (!responseNew._id)
       return { message: 'NOT_CREATE_ANIMAL' };
 
-    const respInsertS3 = await insertProfilePhotoAnimal(file, `${responseNew._id}`);
+    const respInsertS3 = await insertPhotoPerfilGlobal(file, `${responseNew._id}`, 1);
 
     if (respInsertS3.status && respInsertS3.path != '') {
 
-      const resUrl = await getProfileUrl(`${responseNew._id}`, `${file.originalname}`);
+      const resUrl = await getDataUrlGlobal(`${responseNew._id}`, `${file.originalname}`, 2);
       const updateData = { "profilePhoto": resUrl.urlProfile };
       const updateAnimal = await updateAnimalId(`${responseNew._id}`, updateData);
 

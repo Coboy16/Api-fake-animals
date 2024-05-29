@@ -1,4 +1,3 @@
-import { Types } from "mongoose";
 import { Client } from "../interface/clients.interface";
 import clientModel from "../models/clients.models";
 import { encrypPass } from "../utils/bcrypt.handdle";
@@ -18,17 +17,5 @@ const createNewClient = async ({ name, lastName, sexo, email, pass }: Client,) =
   }
 };
 
-const updateClientId = async (clientId: string, updateData: Partial<Client>) => {
-  if (!Types.ObjectId.isValid(clientId))
-    return { message: 'INVALID_ID' };
 
-  const updateClient = await clientModel.findByIdAndUpdate(clientId,
-    { $set: updateData }, { new: true, runValidators: true });
-
-  if (!updateClient)
-    return { message: 'ANIMAL_NOT_FOUND' };
-
-  return updateClient;
-};
-
-export { createNewClient, updateClientId };
+export { createNewClient };

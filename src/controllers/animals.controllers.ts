@@ -78,7 +78,8 @@ const postCreateAnimal = async (req: Request, res: Response) => {
     return res.status(201).json({
       message: 'SUCCESSFULLY_CREATE_ANIMAL',
       status: true,
-      dataAnimal: newAnimal,
+      id: newAnimal._id,
+      name: newAnimal.name
     });
 
   } catch (e) {

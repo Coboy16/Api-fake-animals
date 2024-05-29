@@ -30,12 +30,5 @@ const postCreateUser = async (req: Request, res: Response) => {
   }
 };
 
-const postLoginUser = (req: Request, res: Response) => {
-  try {
 
-  } catch (e) {
-    handleHttp(res, 'ERROR_POST_LOGIN_CLIENT', e);
-  }
-};
-
-export { postCreateUser, postLoginUser }; 
+export { postCreateUser }; 
