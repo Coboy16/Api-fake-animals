@@ -12,5 +12,4 @@ export interface Animals {
   photos: Array<string>;
   type: 'dogs' | 'cats' | 'bunny' | 'rabiots' | 'mouses';
   enterpriseId: Schema.Types.ObjectId;
-
 };

@@ -9,10 +9,10 @@ const updatePhotoProfileByID = async (file: Express.Multer.File, clientId: strin
   if (!Types.ObjectId.isValid(clientId))
     return { message: 'INVALID_ID' };
 
-  const respInsertS3 = await insertPhotoPerfilGlobal(file, clientId, 2);
+  const respInsertS3 = await insertPhotoPerfilGlobal(file, clientId, 2, true);
 
   if (respInsertS3.status && respInsertS3.path != '') {
-    const resUrl = await getDataUrlGlobal(clientId, `${file.originalname}`, 2);
+    const resUrl = await getDataUrlGlobal(clientId, `${file.originalname}`, 2, true);
     const updateData = { "profilePhoto": resUrl.urlProfile };
     const updateAnimal = await updateClientByID(clientId, updateData);
     return updateAnimal;

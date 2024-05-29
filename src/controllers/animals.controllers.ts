@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { handleHttp } from "../utils/error.handle";
-import { getAnimalByID, createNewAnimal, updateAnimalId } from "../services/animals.services";
+import { getAnimalByID, createNewAnimal, updateAnimalId, updatePhotosAnimal } from "../services/animals.services";
 import { animalsResponse } from "../utils/animals.handdle";
 import { Animals } from "../interface/animals.interface";
 
@@ -87,4 +87,23 @@ const postCreateAnimal = async (req: Request, res: Response) => {
   }
 };
 
-export { getDogsPage, getCats, getBunnies, getBirds, getMouses, getAnimalId, putUpdateAnimal, postCreateAnimal };
+const postUpMultiplePhotos = async (req: Request, res: Response) => {
+  try {
+    if (!req.files || !Array.isArray(req.files))
+      return res.status(400).send({ message: 'NOT_FILES_UPLOAD' });
+
+    const id = req.params.id;
+    const photosUrl = await updatePhotosAnimal(req.files, id);
+
+    if ('message' in photosUrl) {
+      return res.status(400).json(photosUrl);
+    }
+
+    return res.status(201).json(photosUrl);
+
+  } catch (e) {
+    handleHttp(res, 'ERROR_UP_MULTIPLE_PHOTO', e);
+  }
+};
+
+export { getDogsPage, getCats, getBunnies, getBirds, getMouses, getAnimalId, putUpdateAnimal, postCreateAnimal, postUpMultiplePhotos };

@@ -1,20 +1,53 @@
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import client from "../utils/clientS3.handdle";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Types } from "mongoose";
 import "dotenv/config";
 
 import { AWS_BUCKET_NAME } from "../config/aws.config";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import client from "../utils/clientS3.handdle";
 
-const insertPhotoPerfilGlobal = async (file: Express.Multer.File, subjectId: string, subjetType: number) => {
+// const insertPhotoPerfilGlobal = async (file: Express.Multer.File, subjectId: string, subjetType: number) => {
+//   //todo: TYPES: (1 -> Animals), (2 -> Clients), (3 -> Enterprise)
+//   if (!Types.ObjectId.isValid(subjectId))
+//     return { message: 'INVALID_ID' };
+
+//   const nameType: string = subjetType === 1 ? 'Animals' : subjetType === 2 ? 'Clients' : 'Enterprise';
+//   const uploadParams = {
+//     Bucket: AWS_BUCKET_NAME,
+//     Key: `${nameType}/profile-photo/${subjectId}/${file.originalname}`,
+//     Body: file.buffer,
+//     ContentType: file.mimetype,
+//   };
+
+//   try {
+//     const comand = new PutObjectCommand(uploadParams);
+//     const response = await client.send(comand);
+
+//     if (response.$metadata.httpStatusCode === 200)
+//       return {
+//         path: `${nameType}/profile-photo/${subjectId}/${file.originalname}`,
+//         status: true,
+//       };
+//     else
+//       return { status: false, message: 'ERROR_UPLOAD_PHOTO' };
+//   } catch (e) {
+//     console.log('ERROR_UPLOAD_PHOTO_S3', e);
+//     throw e;
+//   }
+// };
+
+//Inserta una foto en el bucket de S3 creando el orden de carpeta => Animals/photos/001/foto.png
+const insertPhotoPerfilGlobal = async (file: Express.Multer.File, subjectId: string, subjetType: number, nameFile: boolean) => {
   //todo: TYPES: (1 -> Animals), (2 -> Clients), (3 -> Enterprise)
   if (!Types.ObjectId.isValid(subjectId))
-    return { messge: 'INVALID_ID' };
+    return { message: 'INVALID_ID' };
 
   const nameType: string = subjetType === 1 ? 'Animals' : subjetType === 2 ? 'Clients' : 'Enterprise';
+  const nameFileKey: string = nameFile ? 'profile-photo' : 'photos';
+
   const uploadParams = {
     Bucket: AWS_BUCKET_NAME,
-    Key: `${nameType}/profile-photo/${subjectId}/${file.originalname}`,
+    Key: `${nameType}/${nameFileKey}/${subjectId}/${file.originalname}`,
     Body: file.buffer,
     ContentType: file.mimetype,
   };
@@ -25,7 +58,7 @@ const insertPhotoPerfilGlobal = async (file: Express.Multer.File, subjectId: str
 
     if (response.$metadata.httpStatusCode === 200)
       return {
-        path: `${nameType}/profile-photo/${subjectId}/${file.originalname}`,
+        path: `${nameType}/${nameFileKey}/${subjectId}/${file.originalname}`,
         status: true,
       };
     else
@@ -57,11 +90,27 @@ const getProfileInfo = async (animalId: string, fileName: string) => {
 };
 
 
+// //obtine el url verificado de la imagen para que todos la puedan ver 
+// const getDataUrlGlobal = async (subjectId: string, fileName: string, typeSubjet: number) => {
+//   try {
+//     const nameType: string = typeSubjet === 1 ? 'Animals' : typeSubjet === 2 ? 'Clients' : 'Enterprise';
+//     const key = `${nameType}/profile-photo/${subjectId}/${fileName}`;
+//     const comand = new GetObjectCommand({ Bucket: AWS_BUCKET_NAME, Key: key });
+//     const response = await getSignedUrl(client, comand, { expiresIn: parseInt(<string>process.env.TIME_S3) }); //6 dias
+//     return { urlProfile: response };
+//   } catch (e) {
+//     console.log('ERROR_GET_URL_PHOTO_S3', e);
+//     throw e;
+//   }
+// };
+
 //obtine el url verificado de la imagen para que todos la puedan ver 
-const getDataUrlGlobal = async (subjectId: string, fileName: string, typeSubjet: number) => {
+const getDataUrlGlobal = async (subjectId: string, fileName: string, typeSubjet: number, nameFile: boolean) => {
   try {
     const nameType: string = typeSubjet === 1 ? 'Animals' : typeSubjet === 2 ? 'Clients' : 'Enterprise';
-    const key = `${nameType}/profile-photo/${subjectId}/${fileName}`;
+    const nameFileKey: string = nameFile ? 'profile-photo' : 'photos';
+    const key = `${nameType}/${nameFileKey}/${subjectId}/${fileName}`;
+
     const comand = new GetObjectCommand({ Bucket: AWS_BUCKET_NAME, Key: key });
     const response = await getSignedUrl(client, comand, { expiresIn: parseInt(<string>process.env.TIME_S3) }); //6 dias
     return { urlProfile: response };

@@ -7,6 +7,6 @@ const router = Router();
 router.get('/:id', getClientById);
 router.put('/:id', putClientById);
 router.delete('/:id', deleteClient);
-router.put('/update-photo/:id', upload.single('myPerfilPhoto'), updatePhotoById)
+router.put('/update-photo/:id', upload.single('myPerfilPhoto'), updatePhotoById);
 
 export { router };
