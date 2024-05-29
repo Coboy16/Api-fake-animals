@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+
 import { getAnimalsPage } from "../services/animals.services";
 import { handleHttp } from "./error.handle";
 

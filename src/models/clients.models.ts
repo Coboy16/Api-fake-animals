@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+
 import { Client } from "../interface/clients.interface";
 
 const clientSchema = new Schema<Client>(

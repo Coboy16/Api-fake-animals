@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { getAnimalId, getBunnies, getCats, getDogsPage, postCreateAnimal, postUpMultiplePhotos, putUpdateAnimal } from "../controllers/animals.controllers";
 import { upload } from "../middleware/file.middleware";
 

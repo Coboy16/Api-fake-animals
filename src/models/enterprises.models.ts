@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-import { Enterprise } from "../interface/enterprises.interface";
 
+import { Enterprise } from "../interface/enterprises.interface";
 
 const enterpriseSchema = new Schema<Enterprise>(
   {

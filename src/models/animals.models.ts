@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+
 import { Animals } from "../interface/animals.interface";
 
 const animalsSchema = new Schema<Animals>(
